@@ -5,13 +5,15 @@ Neste tutorial, vamos aprender a baixar e configurar um projeto do GitHub que ut
 Primeiro, vamos clonar o repositório do GitHub para a sua máquina local usando o comando git clone. Substitua link pelo URL do repositório do GitHub.
 
 ```bash
-git clone link
+git clone https://github.com/HermanoCastro65/biblioteca-db-example-mysql-with-prisma.git
 ```
 
 ### Passo 2: Instalar Dependências
 Navegue até a pasta do projeto que você acabou de clonar e execute o comando abaixo para instalar as dependências do projeto usando Yarn ou npm, dependendo de sua preferência.
 
 ```bash
+cd biblioteca-db-example-mysql-with-prisma.git
+
 yarn install
 # ou
 npm install
