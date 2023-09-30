@@ -12,7 +12,7 @@ git clone https://github.com/HermanoCastro65/biblioteca-db-example-mysql-with-pr
 Navegue até a pasta do projeto que você acabou de clonar e execute o comando abaixo para instalar as dependências do projeto usando Yarn ou npm, dependendo de sua preferência.
 
 ```bash
-cd biblioteca-db-example-mysql-with-prisma.git
+cd biblioteca-db-example-mysql-with-prisma
 
 yarn install
 # ou
