@@ -1,0 +1,120 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Funcionario {
+  id_funcionario  Int          @id
+  biblioteca      Biblioteca   @relation(fields: [id_biblioteca], references: [id_biblioteca])
+  id_biblioteca   Int
+  data_nascimento DateTime
+  nome            String
+  cpf             String
+  rg              String
+  logradouro      String
+  numero          String
+  bairro          String
+  cidade          String
+  estado          String
+  telefone        String
+  celular         String
+  email           String
+  cargo           String
+  data_adimissao  DateTime
+  Emprestimo      Emprestimo[]
+}
+
+model Biblioteca {
+  id_biblioteca Int           @id
+  cnpj          String
+  razao_social  String
+  nome_fantasia String
+  logradouro    String
+  numero        String
+  bairro        String
+  cidade        String
+  estado        String
+  telefone      String
+  celular       String
+  email         String
+  Funcionario   Funcionario[]
+  Livro         Livro[]
+}
+
+model Cliente {
+  id_cliente      Int          @id
+  nome            String
+  cpf             String
+  data_nascimento DateTime
+  logradouro      String
+  numero          String
+  bairro          String
+  cidade          String
+  estado          String
+  telefone        String
+  celular         String
+  email           String
+  Emprestimo      Emprestimo[]
+}
+
+model Emprestimo {
+  id_emprestimo       Int         @id
+  funcionario         Funcionario @relation(fields: [id_funcionario], references: [id_funcionario])
+  id_funcionario      Int
+  cliente             Cliente     @relation(fields: [id_cliente], references: [id_cliente])
+  id_cliente          Int
+  data_hora_saida     DateTime
+  data_hora_devolucao DateTime
+  multa_atraso        String
+}
+
+model Livro {
+  id_livro        Int        @id
+  biblioteca      Biblioteca @relation(fields: [id_biblioteca], references: [id_biblioteca])
+  id_biblioteca   Int
+  isbn            String
+  titulo          String
+  editora         String
+  edicao          String
+  data_lancamento DateTime
+  idioma          String
+  quantidade      Int
+}
+
+model Livro_x_emprestimo {
+  id_livro      Int
+  id_emprestimo Int
+
+  @@id([id_livro, id_emprestimo])
+}
+
+model Categoria {
+  id_categoria Int    @id
+  categoria    String
+}
+
+model Livro_x_categoria {
+  id_livro     Int
+  id_categoria Int
+
+  @@id([id_livro, id_categoria])
+}
+
+model Autor {
+  id_autor Int    @id
+  autor    String
+}
+
+model Livro_x_autor {
+  id_livro Int
+  id_autor Int
+
+  @@id([id_livro, id_autor])
+}
