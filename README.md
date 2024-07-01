@@ -31,17 +31,17 @@ datasource db {
 ```
 
 ### Passo 4: Configurar o Arquivo .env
-O arquivo .env é usado para armazenar variáveis de ambiente, incluindo as informações de conexão com o banco de dados. Certifique-se de configurar corretamente o DATABASE_URL no arquivo .env. Substitua user, password, localhost, 3306 e biblioteca pelos valores adequados para o seu banco de dados MySQL.
+O arquivo .env é usado para armazenar variáveis de ambiente, incluindo as informações de conexão com o banco de dados. Certifique-se de configurar corretamente o DATABASE_URL no arquivo .env. Substitua user, password, localhost, 3306 e carro pelos valores adequados para o seu banco de dados MySQL.
 
 ```env
-DATABASE_URL="mysql://user:password@localhost:3306/biblioteca"
+DATABASE_URL="mysql://user:password@localhost:3306/carros"
 ```
 
 ### Passo 5: Criar o Banco de Dados
 Agora que o schema.prisma e o arquivo .env estão configurados, você pode criar o banco de dados executando o seguinte comando:
 
 ```bash
-npx prisma db push
+yarn prisma:push
 ```
 Isso criará o banco de dados MySQL com as tabelas especificadas no schema.prisma.
 
