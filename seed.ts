@@ -163,9 +163,17 @@ async function seedAcessorios() {
 
   try {
     for (const acessorio of acessorios) {
-      await prisma.acessorios.create({
-        data: acessorio,
+      // Verifica se o acessório já existe no banco de dados
+      const existingAcessorio = await prisma.acessorios.findUnique({
+        where: { Cod: acessorio.Cod },
       })
+
+      if (!existingAcessorio) {
+        // Se não existe, cria o acessório
+        await prisma.acessorios.create({
+          data: acessorio,
+        })
+      }
     }
 
     console.log('Acessorios seeded successfully')
