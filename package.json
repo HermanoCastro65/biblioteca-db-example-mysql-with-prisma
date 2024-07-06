@@ -15,7 +15,6 @@
     "prisma:push": "prisma db push",
     "seed": "ts-node ./seed.ts",
     "dev": "yarn format && yarn prisma:push && yarn seed"
-
   },
   "dependencies": {
     "chance": "^1.1.11"
