@@ -353,7 +353,40 @@ async function seedManutencao() {
   }
 }
 
-async function seedTbVeiculoManutencao() {}
+async function seedTbVeiculoManutencao() {
+  try {
+    const veiculos = await prisma.veiculo.findMany()
+    const manutencoes = await prisma.manutencao.findMany()
+
+    const tbVeiculoManutencoes = []
+
+    for (const veiculo of veiculos) {
+      for (const manutencao of manutencoes) {
+        tbVeiculoManutencoes.push({
+          cod: manutencao.cod,
+          Placa: veiculo.Placa,
+          Veiculo: { connect: { Placa: veiculo.Placa } },
+          Manutencao: { connect: { cod: manutencao.cod } },
+        })
+      }
+    }
+
+    await prisma.tb_veiculo_manutencao.createMany({
+      data: tbVeiculoManutencoes,
+    })
+
+    console.log('tb_veiculo_manutencao seeded successfully')
+  } catch (error) {
+    console.error('Error seeding tb_veiculo_manutencao:', error)
+  } finally {
+    await prisma.$disconnect()
+  }
+}
+
+seedTbVeiculoManutencao().catch((error) => {
+  console.error('Error in seedTbVeiculoManutencao:', error)
+  process.exit(1)
+})
 
 async function logQueriesToFile(query: string) {
   try {
