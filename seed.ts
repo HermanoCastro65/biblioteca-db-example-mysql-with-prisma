@@ -70,8 +70,28 @@ async function seedTipoVeiculo() {
 
 
 async function seedFilial() {
-  // Implemente a função para seed de Filial aqui
+  const filiais = [
+    { nome: 'Filial A' },
+    { nome: 'Filial B' },
+    { nome: 'Filial C' },
+    { nome: 'Filial D' },
+    { nome: 'Filial E' },
+    { nome: 'Filial F' },
+    { nome: 'Filial G' },
+    { nome: 'Filial H' },
+    { nome: 'Filial I' },
+    { nome: 'Filial J' },
+  ];
+
+  for (const filial of filiais) {
+    await prisma.filial.create({
+      data: filial,
+    });
+  }
+
+  console.log('Filiais seeded successfully');
 }
+
 
 async function seedCliente() {
   // Implemente a função para seed de Cliente aqui
