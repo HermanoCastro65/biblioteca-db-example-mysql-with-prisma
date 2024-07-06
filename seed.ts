@@ -31,12 +31,43 @@ async function seedTipoServico() {
 }
 
 async function seedServicoExtra() {
-  // Implemente a função para seed de ServicoExtra aqui
+  const servicosExtras = [
+    { Descricao: 'Alinhamento de rodas', Valor: 50.0, TipoServico: 1 },
+    { Descricao: 'Balanceamento de pneus', Valor: 30.0, TipoServico: 2 },
+    { Descricao: 'Lavagem a seco', Valor: 40.0, TipoServico: 1 },
+  ];
+
+  for (const servico of servicosExtras) {
+    await prisma.servicoExtra.create({
+      data: {
+        Descricao: servico.Descricao,
+        Valor: servico.Valor,
+        TipoServico: {
+          connect: { id_tipo: servico.TipoServico }, 
+        },
+      },
+    });
+  }
+
+  console.log('ServicoExtra seeded successfully');
 }
 
 async function seedTipoVeiculo() {
-  // Implemente a função para seed de TipoVeiculo aqui
+  const tiposVeiculo = [
+    { Tipo: 'Sedan' },
+    { Tipo: 'SUV' },
+    { Tipo: 'Hatchback' },
+  ];
+
+  for (const tipo of tiposVeiculo) {
+    await prisma.tipoVeiculo.create({
+      data: tipo,
+    });
+  }
+
+  console.log('TipoVeiculo seeded successfully');
 }
+
 
 async function seedFilial() {
   // Implemente a função para seed de Filial aqui
