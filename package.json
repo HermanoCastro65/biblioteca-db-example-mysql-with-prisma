@@ -5,13 +5,15 @@
     "@types/node": "^20.14.9",
     "i": "^0.3.7",
     "npm": "^10.8.1",
+    "prettier": "3.3.2",
     "prisma": "^5.16.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.2"
   },
   "scripts": {
     "seed": "ts-node ./seed.ts",
-    "prisma:push": "prisma db push"
+    "prisma:push": "prisma db push",
+    "format": "prettier --write \"**/*.ts\""
   },
   "dependencies": {
     "chance": "^1.1.11"
