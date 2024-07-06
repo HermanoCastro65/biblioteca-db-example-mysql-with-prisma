@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import Chance from 'chance';
 import * as fs from 'fs';
 import { promisify } from 'util';
@@ -68,19 +68,11 @@ async function seedTipoVeiculo() {
   console.log('TipoVeiculo seeded successfully');
 }
 
-
 async function seedFilial() {
   const filiais = [
     { nome: 'Filial A' },
     { nome: 'Filial B' },
     { nome: 'Filial C' },
-    { nome: 'Filial D' },
-    { nome: 'Filial E' },
-    { nome: 'Filial F' },
-    { nome: 'Filial G' },
-    { nome: 'Filial H' },
-    { nome: 'Filial I' },
-    { nome: 'Filial J' },
   ];
 
   for (const filial of filiais) {
@@ -89,12 +81,44 @@ async function seedFilial() {
     });
   }
 
-  console.log('Filiais seeded successfully');
+  console.log('Filial seeded successfully');
 }
 
 
 async function seedCliente() {
-  // Implemente a função para seed de Cliente aqui
+  const clientes: Prisma.ClienteCreateInput[] = Array.from({ length: 10 }, () => {
+    const dataNascimento = chance.birthday({ year: chance.integer({ min: 1980, max: 2020 }) });
+    const formattedDateNascimento = new Date(dataNascimento); 
+
+    return {
+      nome: chance.name(),
+      CNPJ: chance.integer({ min: 10000000000000, max: 99999999999999 }).toString(),
+      inscricao_Estadual: chance.integer({ min: 100000000, max: 999999999 }).toString(),
+      cpf: chance.string({ length: 11, pool: '0123456789' }),
+      sexo: chance.pickone(['M', 'F']),
+      data_nascimento: formattedDateNascimento,
+      num_habilitacao: chance.integer({ min: 100000000, max: 999999999 }).toString(),
+      logradouro: chance.street(),
+      numero: chance.integer({ min: 1, max: 100 }).toString(),
+      cidade: chance.city(),
+      bairro: chance.word(),
+      CEP: chance.zip(),
+    };
+  });
+
+  try {
+    for (const cliente of clientes) {
+      await prisma.cliente.create({
+        data: cliente,
+      });
+    }
+
+    console.log('Cliente seeded successfully');
+  } catch (error) {
+    console.error('Error seeding Cliente:', error);
+  } finally {
+    await prisma.$disconnect();
+  }
 }
 
 async function seedVeiculo() {
@@ -127,7 +151,7 @@ async function seedTbVeiculoManutencao() {
 
 async function logQueriesToFile(query: string) {
   try {
-    await writeFileAsync('prisma_queries.sql', `${query.trim()}\n`, { flag: 'a' }); // 'a' para append (acrescentar)
+    await writeFileAsync('prisma_queries.sql', `${query.trim()}\n`, { flag: 'a' });
   } catch (error) {
     console.error('Error writing to file:', error);
   }
