@@ -312,7 +312,46 @@ async function seedAluguelServico() {
   }
 }
 
-async function seedManutencao() {}
+async function seedManutencao() {
+  const veiculos = await prisma.veiculo.findMany()
+
+  const manutencoes: Prisma.ManutencaoCreateInput[] = []
+
+  veiculos.forEach((veiculo) => {
+    const horasLimpeza = Math.floor(Math.random() * 10) + 1
+    const revisaoEntrega = chance.sentence()
+    const dataRevisao = chance.date({ year: 2023 })
+
+    manutencoes.push({
+      Horas_Limpeza: horasLimpeza,
+      RevisaoEntrega: revisaoEntrega,
+      Data_Revisao: dataRevisao,
+      tb_veiculo_manutencao: {
+        create: {
+          Veiculo: {
+            connect: {
+              Placa: veiculo.Placa,
+            },
+          },
+        },
+      },
+    })
+  })
+
+  try {
+    for (const manutencao of manutencoes) {
+      await prisma.manutencao.create({
+        data: manutencao,
+      })
+    }
+
+    console.log('Manutencao seeded successfully')
+  } catch (error) {
+    console.error('Error seeding Manutencao:', error)
+  } finally {
+    await prisma.$disconnect()
+  }
+}
 
 async function seedTbVeiculoManutencao() {}
 
