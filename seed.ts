@@ -163,13 +163,11 @@ async function seedAcessorios() {
 
   try {
     for (const acessorio of acessorios) {
-      // Verifica se o acessório já existe no banco de dados
       const existingAcessorio = await prisma.acessorios.findUnique({
         where: { Cod: acessorio.Cod },
       })
 
       if (!existingAcessorio) {
-        // Se não existe, cria o acessório
         await prisma.acessorios.create({
           data: acessorio,
         })
@@ -184,7 +182,58 @@ async function seedAcessorios() {
   }
 }
 
-async function seedTbCarroAcessorios() {}
+async function seedTbCarroAcessorios() {
+  const veiculos = await prisma.veiculo.findMany()
+  const acessorios = await prisma.acessorios.findMany()
+
+  const tbCarroAcessorios: Prisma.tb_carroacessoriosCreateInput[] = []
+
+  veiculos.forEach((veiculo) => {
+    const numAcessorios = chance.integer({ min: 1, max: 3 })
+
+    for (let i = 0; i < numAcessorios; i++) {
+      const acessorio = chance.pickone(acessorios)
+
+      const existingRecord = tbCarroAcessorios.find(
+        (item) =>
+          item.Veiculo.connect?.Placa === veiculo.Placa &&
+          item.Acessorios.connect?.Cod === acessorio.Cod,
+      )
+
+      if (!existingRecord) {
+        tbCarroAcessorios.push({
+          Veiculo: {
+            connect: { Placa: veiculo.Placa! },
+          },
+          Acessorios: {
+            connect: { Cod: acessorio.Cod! },
+          },
+        })
+      }
+    }
+  })
+
+  try {
+    for (const carroAcessorio of tbCarroAcessorios) {
+      await prisma.tb_carroacessorios.upsert({
+        where: {
+          idAutomovel_Cod: {
+            idAutomovel: carroAcessorio.Veiculo.connect?.Placa!,
+            Cod: carroAcessorio.Acessorios.connect?.Cod!,
+          },
+        },
+        create: carroAcessorio,
+        update: {},
+      })
+    }
+
+    console.log('tb_carroacessorios seeded successfully')
+  } catch (error) {
+    console.error('Error seeding tb_carroacessorios:', error)
+  } finally {
+    await prisma.$disconnect()
+  }
+}
 
 async function seedAluga() {}
 
