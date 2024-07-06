@@ -235,7 +235,44 @@ async function seedTbCarroAcessorios() {
   }
 }
 
-async function seedAluga() {}
+async function seedAluga() {
+  const veiculos = await prisma.veiculo.findMany()
+  const clientes = await prisma.cliente.findMany()
+
+  const alugas: Prisma.AlugaCreateInput[] = Array.from({ length: 10 }, () => {
+    const veiculo = veiculos[Math.floor(Math.random() * veiculos.length)]
+    const cliente = clientes[Math.floor(Math.random() * clientes.length)]
+    const dataInicio = new Date(`2023-01-01T00:00:00Z`)
+    const dataFim = new Date(
+      dataInicio.getTime() + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
+    )
+
+    return {
+      dt_inicio: dataInicio,
+      dt_fim: dataFim,
+      Veiculo: {
+        connect: { Placa: veiculo.Placa },
+      },
+      Cliente: {
+        connect: { cod_cliente: cliente.cod_cliente },
+      },
+    }
+  })
+
+  try {
+    for (const aluga of alugas) {
+      await prisma.aluga.create({
+        data: aluga,
+      })
+    }
+
+    console.log('Aluga seeded successfully')
+  } catch (error) {
+    console.error('Error seeding Aluga:', error)
+  } finally {
+    await prisma.$disconnect()
+  }
+}
 
 async function seedAluguelServico() {}
 
