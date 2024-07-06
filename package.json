@@ -11,7 +11,7 @@
     "typescript": "^5.5.2"
   },
   "scripts": {
-    "format": "prettier --write \"**/*.ts\"",
+    "format": "node remove-comments.js && yarn prettier --write \"**/*.ts\"",
     "prisma:push": "prisma db push",
     "seed": "ts-node ./seed.ts",
     "dev": "yarn format && yarn prisma:push && yarn seed"
