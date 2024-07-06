@@ -274,7 +274,43 @@ async function seedAluga() {
   }
 }
 
-async function seedAluguelServico() {}
+async function seedAluguelServico() {
+  const alugas = await prisma.aluga.findMany()
+  const servicosExtras = await prisma.servicoExtra.findMany()
+
+  const aluguelServicos: Prisma.AluguelServicoCreateInput[] = []
+
+  alugas.forEach((aluga) => {
+    const numServicos = Math.floor(Math.random() * 3) + 1
+
+    for (let i = 0; i < numServicos; i++) {
+      const servico = servicosExtras[Math.floor(Math.random() * servicosExtras.length)]
+
+      aluguelServicos.push({
+        Aluga: {
+          connect: { id: aluga.id },
+        },
+        ServicoExtra: {
+          connect: { ID: servico.ID },
+        },
+      })
+    }
+  })
+
+  try {
+    for (const aluguelServico of aluguelServicos) {
+      await prisma.aluguelServico.create({
+        data: aluguelServico,
+      })
+    }
+
+    console.log('AluguelServico seeded successfully')
+  } catch (error) {
+    console.error('Error seeding AluguelServico:', error)
+  } finally {
+    await prisma.$disconnect()
+  }
+}
 
 async function seedManutencao() {}
 
