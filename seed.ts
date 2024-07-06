@@ -122,12 +122,69 @@ async function seedCliente() {
 }
 
 async function seedVeiculo() {
-  // Implemente a função para seed de Veiculo aqui
+  const tiposVeiculo = await prisma.tipoVeiculo.findMany();
+  const filiais = await prisma.filial.findMany();
+
+  // Lista de cores fictícias para escolha aleatória
+  const cores = ['Preto', 'Branco', 'Prata', 'Vermelho', 'Azul', 'Verde', 'Cinza', 'Amarelo'];
+
+  const veiculos: Prisma.VeiculoCreateInput[] = Array.from({ length: 10 }, () => {
+    const tipoVeiculo = chance.pickone(tiposVeiculo);
+    const filial = chance.pickone(filiais);
+
+    return {
+      Placa: chance.string({ length: 7, pool: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789' }).toUpperCase(),
+      Chassi: chance.integer({ min: 10000000000000000, max: 99999999999999999 }).toString(),
+      NumeroMotor: chance.integer({ min: 1000000000, max: 9999999999 }).toString(),
+      cor: chance.pickone(cores),
+      tamanho: chance.pickone(['Pequeno', 'Médio', 'Grande']),
+      N_Passageiros: chance.integer({ min: 2, max: 7 }),
+      N_portas: chance.integer({ min: 2, max: 5 }),
+      Tipo: chance.pickone(['Sedan', 'SUV', 'Hatchback']),
+      Capacidade_Carga: chance.integer({ min: 300, max: 2000 }),
+      TipoVeiculo: { connect: { cod: tipoVeiculo.cod } },
+      Filial: { connect: { id_filial: filial.id_filial } },
+    };
+  });
+
+  try {
+    for (const veiculo of veiculos) {
+      await prisma.veiculo.create({
+        data: veiculo,
+      });
+    }
+
+    console.log('Veiculo seeded successfully');
+  } catch (error) {
+    console.error('Error seeding Veiculo:', error);
+  } finally {
+    await prisma.$disconnect();
+  }
 }
 
 async function seedAcessorios() {
-  // Implemente a função para seed de Acessorios aqui
+  const tiposAcessorios = ['Tapete', 'Rádio', 'GPS', 'Protetor de banco', 'Câmera de ré'];
+
+  const acessorios: Prisma.AcessoriosCreateInput[] = tiposAcessorios.map((tipo, index) => ({
+    Cod: index + 1, // Exemplo simples: index + 1 para gerar IDs únicos
+    Tipo: tipo,
+  }));
+
+  try {
+    for (const acessorio of acessorios) {
+      await prisma.acessorios.create({
+        data: acessorio,
+      });
+    }
+
+    console.log('Acessorios seeded successfully');
+  } catch (error) {
+    console.error('Error seeding Acessorios:', error);
+  } finally {
+    await prisma.$disconnect();
+  }
 }
+
 
 async function seedTbCarroAcessorios() {
   // Implemente a função para seed de tb_carroacessorios aqui
