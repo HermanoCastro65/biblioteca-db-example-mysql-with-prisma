@@ -12,9 +12,10 @@
   },
   "scripts": {
     "format": "node remove-comments.js && yarn prettier --write \"**/*.ts\"",
+    "delete-prisma-queries": "del prisma_queries.sql",
     "prisma:push": "prisma db push",
     "seed": "ts-node ./seed.ts",
-    "dev": "yarn format && yarn prisma:push && yarn seed"
+    "dev": "yarn format && yarn delete-prisma-queries && yarn prisma:push && yarn seed"
   },
   "dependencies": {
     "chance": "^1.1.11"
