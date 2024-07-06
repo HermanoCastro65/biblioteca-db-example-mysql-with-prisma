@@ -11,9 +11,11 @@
     "typescript": "^5.5.2"
   },
   "scripts": {
-    "seed": "ts-node ./seed.ts",
+    "format": "prettier --write \"**/*.ts\"",
     "prisma:push": "prisma db push",
-    "format": "prettier --write \"**/*.ts\""
+    "seed": "ts-node ./seed.ts",
+    "dev": "yarn format && yarn prisma:push && yarn seed"
+
   },
   "dependencies": {
     "chance": "^1.1.11"
